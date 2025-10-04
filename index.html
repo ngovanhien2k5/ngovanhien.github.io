@@ -545,55 +545,200 @@
 
         .cart-icon {
             position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cart-icon-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
         }
 
         .cart-count {
             position: absolute;
             top: -8px;
             right: -8px;
-            background: #f5576c;
+            background: #ef4444;
             color: white;
             border-radius: 50%;
-            width: 20px;
+            min-width: 20px;
             height: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.8rem;
-            font-weight: bold;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            animation: pulse 0.3s ease-in-out;
+        }
+
+        .cart-text {
+            font-weight: 600;
+        }
+
+        @keyframes cartPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .cart-count.updated {
+            animation: cartPulse 0.4s ease-in-out;
         }
 
         @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 15px;
+            }
+            
             .nav-menu {
                 display: none;
             }
             
+            .nav-actions {
+                gap: 8px;
+            }
+            
+            .nav-actions .btn {
+                padding: 8px 12px;
+                font-size: 0.875rem;
+            }
+            
+            .cart-text {
+                display: none;
+            }
+            
+            .hero {
+                padding: 60px 0;
+            }
+            
             .hero h1 {
                 font-size: 2rem;
+                margin-bottom: 12px;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+                margin-bottom: 30px;
             }
             
             .search-bar {
+                max-width: 100%;
+                margin: 0 auto 30px;
                 flex-direction: column;
-                gap: 10px;
+                gap: 0;
+                padding: 8px;
+            }
+            
+            .search-bar input {
+                padding: 14px 16px;
+                font-size: 1rem;
+            }
+            
+            .search-bar button {
+                padding: 14px 20px;
+                margin-top: 8px;
+            }
+            
+            .section-title {
+                font-size: 1.75rem;
+                margin-bottom: 30px;
+            }
+            
+            .category-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            
+            .category-card {
+                padding: 24px 16px;
+            }
+            
+            .category-card .icon {
+                font-size: 2rem;
+                margin-bottom: 12px;
+            }
+            
+            .category-card h3 {
+                font-size: 1rem;
+            }
+            
+            .category-card p {
+                font-size: 0.8rem;
             }
             
             .filter-bar {
                 flex-direction: column;
                 align-items: stretch;
+                gap: 15px;
+            }
+            
+            .filter-tags {
+                gap: 8px;
+                justify-content: center;
+            }
+            
+            .filter-tag {
+                padding: 6px 12px;
+                font-size: 0.8rem;
             }
             
             .product-grid {
                 grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .product-card .product-info {
+                padding: 20px;
+            }
+            
+            .product-title {
+                font-size: 1.1rem;
+            }
+            
+            .modal {
+                padding: 20px;
             }
             
             .modal-content {
-                margin: 20px;
+                margin: 0;
                 padding: 20px;
+                max-height: 90vh;
+                width: 100%;
             }
             
             #productModalContent > div:first-child {
                 grid-template-columns: 1fr !important;
                 gap: 20px !important;
+            }
+            
+            .notification {
+                right: 10px;
+                left: 10px;
+                top: 10px;
+                transform: translateY(-100px);
+            }
+            
+            .notification.show {
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 1.75rem;
+            }
+            
+            .nav-actions .btn {
+                padding: 6px 10px;
+                font-size: 0.8rem;
             }
         }
 
@@ -703,9 +848,15 @@
                 <button class="btn btn-outline" onclick="openModal('loginModal')">
                     👤 Đăng nhập
                 </button>
+                <button class="btn btn-outline" onclick="openModal('registerModal')" style="display: none;" id="registerBtn">
+                    📝 Đăng ký
+                </button>
                 <button class="btn btn-primary cart-icon" onclick="openModal('cartModal')">
-                    🛒 Giỏ hàng
-                    <span class="cart-count" id="cartCount">0</span>
+                    <span class="cart-icon-wrapper">
+                        🛒
+                        <span class="cart-count" id="cartCount">0</span>
+                    </span>
+                    <span class="cart-text">Giỏ hàng</span>
                 </button>
             </div>
         </div>
@@ -840,14 +991,67 @@
             </div>
             <form onsubmit="handleLogin(event)">
                 <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 5px;">Email:</label>
-                    <input type="email" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;" required>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Email:</label>
+                    <input type="email" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem; transition: border-color 0.3s;" required>
                 </div>
                 <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 5px;">Mật khẩu:</label>
-                    <input type="password" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;" required>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Mật khẩu:</label>
+                    <input type="password" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem; transition: border-color 0.3s;" required>
                 </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Đăng nhập</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 15px;">Đăng nhập</button>
+                <div style="text-align: center;">
+                    <span style="color: #6b7280;">Chưa có tài khoản? </span>
+                    <button type="button" onclick="switchToRegister()" style="background: none; border: none; color: #3b82f6; font-weight: 600; cursor: pointer; text-decoration: underline;">
+                        Đăng ký ngay
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Đăng ký tài khoản</h2>
+                <button class="close-btn" onclick="closeModal('registerModal')">&times;</button>
+            </div>
+            <form onsubmit="handleRegister(event)">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Họ và tên:</label>
+                    <input type="text" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem; transition: border-color 0.3s;" required>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Email:</label>
+                    <input type="email" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem; transition: border-color 0.3s;" required>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Số điện thoại:</label>
+                    <input type="tel" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem; transition: border-color 0.3s;" required>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Mật khẩu:</label>
+                    <input type="password" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem; transition: border-color 0.3s;" required>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Xác nhận mật khẩu:</label>
+                    <input type="password" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem; transition: border-color 0.3s;" required>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" required style="width: 18px; height: 18px;">
+                        <span style="font-size: 0.9rem; color: #6b7280;">
+                            Tôi đồng ý với <a href="#" style="color: #3b82f6; text-decoration: none;">Điều khoản sử dụng</a> và <a href="#" style="color: #3b82f6; text-decoration: none;">Chính sách bảo mật</a>
+                        </span>
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 15px;">Đăng ký</button>
+                <div style="text-align: center;">
+                    <span style="color: #6b7280;">Đã có tài khoản? </span>
+                    <button type="button" onclick="switchToLogin()" style="background: none; border: none; color: #3b82f6; font-weight: 600; cursor: pointer; text-decoration: underline;">
+                        Đăng nhập ngay
+                    </button>
+                </div>
             </form>
         </div>
     </div>
@@ -1228,13 +1432,70 @@
         }
 
         function searchProducts() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            
+            if (!searchTerm) {
+                showNotification('⚠️ Vui lòng nhập từ khóa tìm kiếm!', 'error');
+                return;
+            }
+            
             const filtered = products.filter(product => 
                 product.title.toLowerCase().includes(searchTerm) ||
                 product.description.toLowerCase().includes(searchTerm) ||
                 product.tech.some(tech => tech.toLowerCase().includes(searchTerm))
             );
+            
             displayProducts(filtered);
+            
+            // Show search results notification
+            if (filtered.length === 0) {
+                showNotification(`❌ Không tìm thấy sản phẩm nào với từ khóa "${searchTerm}"`, 'error');
+            } else {
+                showNotification(`🔍 Tìm thấy ${filtered.length} sản phẩm với từ khóa "${searchTerm}"`, 'success');
+            }
+            
+            // Update page title to show search results
+            const productSection = document.querySelector('#products .section-title');
+            if (filtered.length > 0) {
+                productSection.textContent = `Kết quả tìm kiếm: "${searchTerm}" (${filtered.length} sản phẩm)`;
+            } else {
+                productSection.textContent = `Không tìm thấy kết quả cho: "${searchTerm}"`;
+            }
+            
+            // Add clear search button
+            addClearSearchButton(searchTerm);
+        }
+        
+        function addClearSearchButton(searchTerm) {
+            // Remove existing clear button if any
+            const existingBtn = document.getElementById('clearSearchBtn');
+            if (existingBtn) {
+                existingBtn.remove();
+            }
+            
+            // Add clear search button
+            const filterBar = document.querySelector('.filter-bar');
+            const clearBtn = document.createElement('button');
+            clearBtn.id = 'clearSearchBtn';
+            clearBtn.className = 'btn btn-outline';
+            clearBtn.innerHTML = '❌ Xóa tìm kiếm';
+            clearBtn.style.marginLeft = 'auto';
+            clearBtn.onclick = clearSearch;
+            
+            filterBar.appendChild(clearBtn);
+        }
+        
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            displayProducts(products);
+            document.querySelector('#products .section-title').textContent = 'Đồ Án Nổi Bật';
+            
+            const clearBtn = document.getElementById('clearSearchBtn');
+            if (clearBtn) {
+                clearBtn.remove();
+            }
+            
+            showNotification('✅ Đã xóa bộ lọc tìm kiếm', 'success');
         }
 
         function addToCart(productId) {
@@ -1256,7 +1517,21 @@
 
         function updateCartCount() {
             const count = cart.reduce((total, item) => total + item.quantity, 0);
-            document.getElementById('cartCount').textContent = count;
+            const cartCountEl = document.getElementById('cartCount');
+            cartCountEl.textContent = count;
+            
+            // Add animation effect
+            cartCountEl.classList.add('updated');
+            setTimeout(() => {
+                cartCountEl.classList.remove('updated');
+            }, 400);
+            
+            // Hide/show cart count based on items
+            if (count === 0) {
+                cartCountEl.style.display = 'none';
+            } else {
+                cartCountEl.style.display = 'flex';
+            }
         }
 
         function updateCartDisplay() {
@@ -1342,16 +1617,75 @@
                 showNotification('🎉 Đăng nhập thành công! Chào mừng bạn đến với CodeMarket.', 'success');
                 closeModal('loginModal');
                 
-                // Update login button
-                const loginBtn = document.querySelector('.nav-actions .btn-outline');
-                loginBtn.innerHTML = '👤 Xin chào, User';
-                loginBtn.onclick = null;
+                // Update UI after login
+                updateUIAfterLogin('User');
                 
                 // Reset form
                 event.target.reset();
                 submitBtn.textContent = 'Đăng nhập';
                 submitBtn.disabled = false;
             }, 1500);
+        }
+        
+        function handleRegister(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const password = event.target.querySelector('input[type="password"]').value;
+            const confirmPassword = event.target.querySelectorAll('input[type="password"]')[1].value;
+            
+            // Validate password match
+            if (password !== confirmPassword) {
+                showNotification('❌ Mật khẩu xác nhận không khớp!', 'error');
+                return;
+            }
+            
+            // Validate password strength
+            if (password.length < 6) {
+                showNotification('❌ Mật khẩu phải có ít nhất 6 ký tự!', 'error');
+                return;
+            }
+            
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            submitBtn.textContent = 'Đang đăng ký...';
+            submitBtn.disabled = true;
+            
+            setTimeout(() => {
+                const userName = event.target.querySelector('input[type="text"]').value;
+                showNotification(`🎉 Đăng ký thành công! Chào mừng ${userName} đến với CodeMarket.`, 'success');
+                closeModal('registerModal');
+                
+                // Update UI after registration
+                updateUIAfterLogin(userName);
+                
+                // Reset form
+                event.target.reset();
+                submitBtn.textContent = 'Đăng ký';
+                submitBtn.disabled = false;
+            }, 2000);
+        }
+        
+        function updateUIAfterLogin(userName) {
+            // Update login button
+            const loginBtn = document.querySelector('.nav-actions .btn-outline');
+            loginBtn.innerHTML = `👤 Xin chào, ${userName}`;
+            loginBtn.onclick = null;
+            
+            // Hide register button if visible
+            const registerBtn = document.getElementById('registerBtn');
+            if (registerBtn) {
+                registerBtn.style.display = 'none';
+            }
+        }
+        
+        function switchToRegister() {
+            closeModal('loginModal');
+            openModal('registerModal');
+        }
+        
+        function switchToLogin() {
+            closeModal('registerModal');
+            openModal('loginModal');
         }
 
         // Close modal when clicking outside
@@ -1455,5 +1789,5 @@
             }
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98972cceb769096a',t:'MTc1OTYwNzA3OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9897a0b5147e0452',t:'MTc1OTYxMTgyNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
