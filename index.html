@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeMarket - Chợ Đồ Án Code</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
+            min-height: 100vh;
+            color: #1e293b;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(102, 126, 234, 0.6); }
+        }
+
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .header {
+            background: white;
+            padding: 1rem 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .header.scrolled {
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 0.75rem 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #3b82f6;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            color: #2563eb;
+        }
+
+        .logo .icon {
+            font-size: 1.8rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #64748b;
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 8px 16px;
+            border-radius: 6px;
+        }
+
+        .nav-menu a:hover {
+            color: #3b82f6;
+            background: #f1f5f9;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #3b82f6;
+            border: 1px solid #3b82f6;
+        }
+
+        .btn-outline:hover {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 80px 0;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: white;
+            animation: slideInUp 1s ease-out;
+        }
+
+        .hero p {
+            font-size: 1.125rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            animation: slideInUp 1s ease-out 0.2s both;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .search-bar {
+            max-width: 500px;
+            margin: 0 auto 40px;
+            display: flex;
+            background: white;
+            border-radius: 12px;
+            padding: 4px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            animation: slideInUp 1s ease-out 0.4s both;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar:hover {
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+        }
+
+        .search-bar input {
+            flex: 1;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1rem;
+            border-radius: 8px;
+            outline: none;
+            background: transparent;
+            color: #1e293b;
+        }
+
+        .search-bar input::placeholder {
+            color: #64748b;
+        }
+
+        .search-bar button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar button:hover {
+            background: #2563eb;
+        }
+
+        .categories {
+            background: white;
+            padding: 60px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            color: #1e293b;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .category-card {
+            background: white;
+            padding: 32px 24px;
+            border-radius: 16px;
+            text-align: center;
+            color: #1e293b;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+            position: relative;
+        }
+
+        .category-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border-color: #3b82f6;
+        }
+
+        .category-card .icon {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .category-card:nth-child(1) .icon { color: #3b82f6; }
+        .category-card:nth-child(2) .icon { color: #ef4444; }
+        .category-card:nth-child(3) .icon { color: #06b6d4; }
+        .category-card:nth-child(4) .icon { color: #10b981; }
+        .category-card:nth-child(5) .icon { color: #f59e0b; }
+        .category-card:nth-child(6) .icon { color: #8b5cf6; }
+
+        .category-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .category-card h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1e293b;
+        }
+
+        .category-card p {
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+
+        .products {
+            padding: 60px 0;
+            background: #f8f9fa;
+        }
+
+        .filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .filter-tags {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tag {
+            padding: 8px 16px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .filter-tag.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        .sort-select {
+            padding: 10px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            border: 1px solid #e2e8f0;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border-color: #3b82f6;
+        }
+
+        .product-card > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .product-image {
+            height: 200px;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            font-size: 3rem;
+            position: relative;
+        }
+
+        .product-image .emoji {
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+        }
+
+        .product-info {
+            padding: 25px;
+        }
+
+        .product-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .product-description {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .product-tech {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tech-tag {
+            background: #e9ecef;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #ffc107;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section ul li a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section ul li a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #34495e;
+            color: #bdc3c7;
+        }
+
+        .cart-icon {
+            position: relative;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #f5576c;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .search-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                margin: 20px;
+                padding: 20px;
+            }
+            
+            #productModalContent > div:first-child {
+                grid-template-columns: 1fr !important;
+                gap: 20px !important;
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .demo-notice {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border: 2px solid #f39c12;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            text-align: center;
+            color: #856404;
+            box-shadow: 0 8px 25px rgba(243, 156, 18, 0.2);
+            animation: slideInUp 1s ease-out 0.6s both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-notice::before {
+            content: '⚠️';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            font-size: 2rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transform: translateX(400px);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+            font-weight: 600;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="icon">💻</span> CodeMarket
+            </div>
+            <nav class="nav-menu">
+                <a href="#home">Trang chủ</a>
+                <a href="#categories">Danh mục</a>
+                <a href="#products">Sản phẩm</a>
+                <a href="#about">Về chúng tôi</a>
+                <a href="#contact">Liên hệ</a>
+            </nav>
+            <div class="nav-actions">
+                <button class="btn btn-outline" onclick="openModal('loginModal')">
+                    👤 Đăng nhập
+                </button>
+                <button class="btn btn-primary cart-icon" onclick="openModal('cartModal')">
+                    🛒 Giỏ hàng
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>Chợ Đồ Án Code Chất Lượng Cao</h1>
+            <p>Tìm kiếm và mua các đồ án code hoàn chỉnh từ sinh viên và lập trình viên tài năng</p>
+            
+            <div class="demo-notice">
+                <strong>Demo Website:</strong> Giao diện hoàn chỉnh với tính năng mua sắm. Các giao dịch thanh toán thực tế cần tích hợp cổng thanh toán.
+            </div>
+            
+            <div class="search-bar">
+                <input type="text" placeholder="Tìm kiếm đồ án theo tên, công nghệ..." id="searchInput">
+                <button onclick="searchProducts()">🔍 Tìm kiếm</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="categories" id="categories">
+        <div class="container">
+            <h2 class="section-title">Danh Mục Đồ Án</h2>
+            <div class="category-grid">
+                <div class="category-card" onclick="filterByCategory('web')">
+                    <div class="icon">🌐</div>
+                    <h3>Web Development</h3>
+                    <p>Website, Web App, E-commerce</p>
+                </div>
+                <div class="category-card" onclick="filterByCategory('mobile')">
+                    <div class="icon">📱</div>
+                    <h3>Mobile App</h3>
+                    <p>Android, iOS, React Native</p>
+                </div>
+                <div class="category-card" onclick="filterByCategory('desktop')">
+                    <div class="icon">💻</div>
+                    <h3>Desktop App</h3>
+                    <p>Java, C#, Python, Electron</p>
+                </div>
+                <div class="category-card" onclick="filterByCategory('ai')">
+                    <div class="icon">🤖</div>
+                    <h3>AI & Machine Learning</h3>
+                    <p>Python, TensorFlow, PyTorch</p>
+                </div>
+                <div class="category-card" onclick="filterByCategory('game')">
+                    <div class="icon">🎮</div>
+                    <h3>Game Development</h3>
+                    <p>Unity, Unreal, HTML5 Games</p>
+                </div>
+                <div class="category-card" onclick="filterByCategory('blockchain')">
+                    <div class="icon">⛓️</div>
+                    <h3>Blockchain</h3>
+                    <p>Smart Contract, DApp, Crypto</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="products" id="products">
+        <div class="container">
+            <h2 class="section-title">Đồ Án Nổi Bật</h2>
+            
+            <div class="filter-bar">
+                <div class="filter-tags">
+                    <div class="filter-tag active" onclick="filterByTag('all')">Tất cả</div>
+                    <div class="filter-tag" onclick="filterByTag('web')">Web</div>
+                    <div class="filter-tag" onclick="filterByTag('mobile')">Mobile</div>
+                    <div class="filter-tag" onclick="filterByTag('desktop')">Desktop</div>
+                    <div class="filter-tag" onclick="filterByTag('ai')">AI/ML</div>
+                </div>
+                <select class="sort-select" onchange="sortProducts(this.value)">
+                    <option value="newest">Mới nhất</option>
+                    <option value="price-low">Giá thấp đến cao</option>
+                    <option value="price-high">Giá cao đến thấp</option>
+                    <option value="rating">Đánh giá cao nhất</option>
+                </select>
+            </div>
+
+            <div class="product-grid" id="productGrid">
+                <!-- Products will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>CodeMarket</h3>
+                    <p>Nền tảng mua bán đồ án code hàng đầu Việt Nam. Kết nối sinh viên và lập trình viên tài năng.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Danh mục</h3>
+                    <ul>
+                        <li><a href="#">Web Development</a></li>
+                        <li><a href="#">Mobile App</a></li>
+                        <li><a href="#">Desktop App</a></li>
+                        <li><a href="#">AI & Machine Learning</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Hỗ trợ</h3>
+                    <ul>
+                        <li><a href="#">Trung tâm trợ giúp</a></li>
+                        <li><a href="#">Chính sách bảo mật</a></li>
+                        <li><a href="#">Điều khoản sử dụng</a></li>
+                        <li><a href="#">Liên hệ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Kết nối</h3>
+                    <ul>
+                        <li><a href="#">📧 support@codemarket.vn</a></li>
+                        <li><a href="#">📞 0123 456 789</a></li>
+                        <li><a href="#">📍 Hà Nội, Việt Nam</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 CodeMarket. Tất cả quyền được bảo lưu.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Đăng nhập</h2>
+                <button class="close-btn" onclick="closeModal('loginModal')">&times;</button>
+            </div>
+            <form onsubmit="handleLogin(event)">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 5px;">Email:</label>
+                    <input type="email" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;" required>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 5px;">Mật khẩu:</label>
+                    <input type="password" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Đăng nhập</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="modal" id="cartModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Giỏ hàng</h2>
+                <button class="close-btn" onclick="closeModal('cartModal')">&times;</button>
+            </div>
+            <div id="cartItems">
+                <p style="text-align: center; color: #666;">Giỏ hàng trống</p>
+            </div>
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
+                <div style="display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: bold;">
+                    <span>Tổng cộng:</span>
+                    <span id="cartTotal">0đ</span>
+                </div>
+                <button class="btn btn-primary" style="width: 100%; margin-top: 15px;" onclick="checkout()">
+                    Thanh toán
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Detail Modal -->
+    <div class="modal" id="productModal">
+        <div class="modal-content" style="max-width: 900px;">
+            <div class="modal-header">
+                <h2 id="productModalTitle">Chi tiết sản phẩm</h2>
+                <button class="close-btn" onclick="closeModal('productModal')">&times;</button>
+            </div>
+            <div id="productModalContent">
+                <!-- Product details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample product data
+        const products = [
+            {
+                id: 1,
+                title: "Website Bán Hàng E-commerce",
+                description: "Website bán hàng hoàn chỉnh với giỏ hàng, thanh toán, quản lý đơn hàng",
+                price: 2500000,
+                category: "web",
+                tech: ["React", "Node.js", "MongoDB"],
+                rating: 4.8,
+                image: "🛒",
+                fullDescription: "Đồ án website bán hàng e-commerce hoàn chỉnh được xây dựng bằng React.js cho frontend và Node.js cho backend. Hệ thống bao gồm đầy đủ các tính năng cần thiết cho một website thương mại điện tử chuyên nghiệp.",
+                features: [
+                    "🏪 Giao diện người dùng hiện đại và responsive",
+                    "🛒 Hệ thống giỏ hàng và thanh toán đầy đủ",
+                    "👤 Quản lý tài khoản người dùng",
+                    "📦 Quản lý sản phẩm và danh mục",
+                    "📊 Dashboard admin với thống kê",
+                    "🔍 Tìm kiếm và lọc sản phẩm nâng cao",
+                    "💳 Tích hợp cổng thanh toán",
+                    "📱 Tối ưu cho mobile"
+                ],
+                demoUrl: "https://ecommerce-demo.example.com",
+                sourceCode: "Mã nguồn đầy đủ + Database + Tài liệu hướng dẫn"
+            },
+            {
+                id: 2,
+                title: "App Quản Lý Sinh Viên",
+                description: "Ứng dụng mobile quản lý thông tin sinh viên, điểm số, lịch học",
+                price: 1800000,
+                category: "mobile",
+                tech: ["React Native", "Firebase"],
+                rating: 4.6,
+                image: "🎓",
+                fullDescription: "Ứng dụng mobile quản lý sinh viên được phát triển bằng React Native, hỗ trợ cả Android và iOS. Ứng dụng giúp sinh viên và giảng viên quản lý thông tin học tập một cách hiệu quả.",
+                features: [
+                    "📚 Quản lý thông tin sinh viên",
+                    "📊 Xem điểm số và kết quả học tập",
+                    "📅 Lịch học và lịch thi",
+                    "📢 Thông báo từ nhà trường",
+                    "👨‍🏫 Giao diện riêng cho giảng viên",
+                    "📱 Hoạt động offline",
+                    "🔔 Push notification",
+                    "📈 Thống kê tiến độ học tập"
+                ],
+                demoUrl: "https://student-app-demo.example.com",
+                sourceCode: "Source code React Native + Firebase config + APK file"
+            },
+            {
+                id: 3,
+                title: "Phần Mềm Quản Lý Thư Viện",
+                description: "Desktop app quản lý sách, mượn trả, thống kê với giao diện đẹp",
+                price: 2200000,
+                category: "desktop",
+                tech: ["Java", "MySQL", "JavaFX"],
+                rating: 4.7,
+                image: "📚",
+                fullDescription: "Phần mềm quản lý thư viện desktop được xây dựng bằng Java với giao diện JavaFX hiện đại. Hệ thống quản lý toàn bộ hoạt động của thư viện từ sách, độc giả đến các giao dịch mượn trả.",
+                features: [
+                    "📖 Quản lý danh mục sách và tài liệu",
+                    "👥 Quản lý thông tin độc giả",
+                    "🔄 Xử lý mượn trả sách tự động",
+                    "💰 Tính phí phạt trễ hạn",
+                    "📊 Báo cáo thống kê chi tiết",
+                    "🔍 Tìm kiếm nâng cao",
+                    "🖨️ In thẻ thư viện và biên lai",
+                    "💾 Backup và restore dữ liệu"
+                ],
+                demoUrl: "https://library-demo.example.com",
+                sourceCode: "Source Java + Database MySQL + File .jar + Hướng dẫn cài đặt"
+            },
+            {
+                id: 4,
+                title: "Hệ Thống Nhận Diện Khuôn Mặt",
+                description: "AI nhận diện khuôn mặt real-time với độ chính xác cao",
+                price: 3500000,
+                category: "ai",
+                tech: ["Python", "OpenCV", "TensorFlow"],
+                rating: 4.9,
+                image: "👤",
+                fullDescription: "Hệ thống nhận diện khuôn mặt sử dụng AI và machine learning với độ chính xác cao. Ứng dụng có thể nhận diện real-time qua camera và quản lý cơ sở dữ liệu khuôn mặt.",
+                features: [
+                    "🎯 Nhận diện khuôn mặt real-time",
+                    "📸 Đăng ký khuôn mặt mới",
+                    "🗄️ Quản lý database khuôn mặt",
+                    "📊 Thống kê lượt ra vào",
+                    "⚡ Xử lý nhanh với GPU",
+                    "🔒 Bảo mật dữ liệu cao",
+                    "📱 Giao diện web quản lý",
+                    "🎥 Hỗ trợ nhiều camera"
+                ],
+                demoUrl: "https://face-recognition-demo.example.com",
+                sourceCode: "Source Python + Model AI + Dataset mẫu + Hướng dẫn training"
+            },
+            {
+                id: 5,
+                title: "Game Puzzle 2D",
+                description: "Game giải đố 2D với nhiều level, âm thanh và hiệu ứng đẹp",
+                price: 1500000,
+                category: "game",
+                tech: ["Unity", "C#"],
+                rating: 4.4,
+                image: "🧩",
+                fullDescription: "Game puzzle 2D được phát triển trên Unity với gameplay hấp dẫn và đồ họa đẹp mắt. Game có nhiều level với độ khó tăng dần và hệ thống âm thanh sống động.",
+                features: [
+                    "🎮 50+ level với độ khó tăng dần",
+                    "🎨 Đồ họa 2D đẹp mắt",
+                    "🎵 Âm thanh và hiệu ứng sống động",
+                    "🏆 Hệ thống điểm số và ranking",
+                    "💾 Lưu tiến độ game",
+                    "⚙️ Cài đặt âm thanh, điều khiển",
+                    "📱 Tối ưu cho mobile",
+                    "🎯 Hệ thống achievement"
+                ],
+                demoUrl: "https://puzzle-game-demo.example.com",
+                sourceCode: "Project Unity + Source C# + Assets + Build APK/EXE"
+            },
+            {
+                id: 6,
+                title: "Smart Contract Voting",
+                description: "Hệ thống bỏ phiếu phi tập trung trên blockchain Ethereum",
+                price: 4000000,
+                category: "blockchain",
+                tech: ["Solidity", "Web3.js", "React"],
+                rating: 4.8,
+                image: "🗳️",
+                fullDescription: "Hệ thống bỏ phiếu phi tập trung sử dụng blockchain Ethereum đảm bảo tính minh bạch và bảo mật tuyệt đối. Smart contract được viết bằng Solidity với giao diện web hiện đại.",
+                features: [
+                    "🔐 Bảo mật tuyệt đối với blockchain",
+                    "🗳️ Bỏ phiếu minh bạch, không thể thay đổi",
+                    "👥 Quản lý danh sách cử tri",
+                    "📊 Thống kê kết quả real-time",
+                    "💰 Tối ưu gas fee",
+                    "🌐 Giao diện web thân thiện",
+                    "📱 Responsive design",
+                    "🔍 Kiểm tra tính hợp lệ phiếu bầu"
+                ],
+                demoUrl: "https://voting-dapp-demo.example.com",
+                sourceCode: "Smart Contract + Frontend React + Web3 integration + Deploy guide"
+            },
+            {
+                id: 7,
+                title: "Website Tin Tức Responsive",
+                description: "Portal tin tức với admin panel, SEO tối ưu, responsive design",
+                price: 2000000,
+                category: "web",
+                tech: ["PHP", "Laravel", "MySQL"],
+                rating: 4.5,
+                image: "📰",
+                fullDescription: "Website tin tức chuyên nghiệp được xây dựng bằng Laravel framework với đầy đủ tính năng của một portal tin tức hiện đại. Tối ưu SEO và responsive hoàn hảo.",
+                features: [
+                    "📰 Quản lý bài viết và danh mục",
+                    "👨‍💼 Hệ thống phân quyền admin/editor",
+                    "🔍 SEO tối ưu cho Google",
+                    "📱 Responsive trên mọi thiết bị",
+                    "💬 Hệ thống bình luận",
+                    "📊 Thống kê lượt xem",
+                    "🔔 Newsletter và thông báo",
+                    "⚡ Tối ưu tốc độ loading"
+                ],
+                demoUrl: "https://news-portal-demo.example.com",
+                sourceCode: "Source Laravel + Database + Admin panel + SEO config"
+            },
+            {
+                id: 8,
+                title: "App Chat Real-time",
+                description: "Ứng dụng chat với tin nhắn real-time, gửi file, emoji",
+                price: 2800000,
+                category: "mobile",
+                tech: ["Flutter", "Firebase", "Socket.io"],
+                rating: 4.7,
+                image: "💬",
+                fullDescription: "Ứng dụng chat real-time được phát triển bằng Flutter với Firebase backend. Hỗ trợ tin nhắn văn bản, hình ảnh, file và nhiều tính năng chat hiện đại khác.",
+                features: [
+                    "💬 Chat real-time với Socket.io",
+                    "📸 Gửi hình ảnh và file",
+                    "😊 Emoji và sticker",
+                    "👥 Chat nhóm và cá nhân",
+                    "🔔 Push notification",
+                    "🔍 Tìm kiếm tin nhắn",
+                    "🔒 Mã hóa end-to-end",
+                    "📱 Hoạt động offline"
+                ],
+                demoUrl: "https://chat-app-demo.example.com",
+                sourceCode: "Source Flutter + Firebase config + APK/IPA + Backend setup"
+            }
+        ];
+
+        let cart = [];
+        let currentFilter = 'all';
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            displayProducts(products);
+            updateCartCount();
+            initializeAnimations();
+            initializeScrollEffects();
+        });
+
+        // Notification system
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.classList.add('show'), 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => document.body.removeChild(notification), 400);
+            }, 3000);
+        }
+
+        // Animation initialization
+        function initializeAnimations() {
+            // Add animate-on-scroll class to elements
+            const elements = document.querySelectorAll('.category-card, .product-card');
+            elements.forEach((el, index) => {
+                el.classList.add('animate-on-scroll');
+                el.style.animationDelay = `${index * 0.1}s`;
+            });
+        }
+
+        // Scroll effects
+        function initializeScrollEffects() {
+            const header = document.querySelector('.header');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 100) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+                
+                // Animate elements on scroll
+                const elements = document.querySelectorAll('.animate-on-scroll');
+                elements.forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top < window.innerHeight - 100) {
+                        el.classList.add('visible');
+                    }
+                });
+            });
+        }
+
+        function displayProducts(productsToShow) {
+            const productGrid = document.getElementById('productGrid');
+            productGrid.innerHTML = '';
+
+            productsToShow.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <div class="product-image" onclick="showProductDetail(${product.id})" style="cursor: pointer;"><span class="emoji">${product.image}</span></div>
+                    <div class="product-info">
+                        <div class="product-title" onclick="showProductDetail(${product.id})" style="cursor: pointer;">${product.title}</div>
+                        <div class="product-description">${product.description}</div>
+                        <div class="product-tech">
+                            ${product.tech.map(tech => `<span class="tech-tag">${tech}</span>`).join('')}
+                        </div>
+                        <div class="product-footer">
+                            <div class="product-price">${formatPrice(product.price)}</div>
+                            <div class="product-rating">
+                                ${'⭐'.repeat(Math.floor(product.rating))} ${product.rating}
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-top: 15px;">
+                            <button class="btn btn-outline" style="flex: 1;" onclick="showProductDetail(${product.id})">
+                                👁️ Chi tiết
+                            </button>
+                            <button class="btn btn-primary" style="flex: 1;" onclick="addToCart(${product.id})">
+                                🛒 Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                `;
+                productGrid.appendChild(productCard);
+            });
+        }
+
+        function formatPrice(price) {
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            }).format(price);
+        }
+
+        function filterByCategory(category) {
+            currentFilter = category;
+            const filtered = category === 'all' ? products : products.filter(p => p.category === category);
+            displayProducts(filtered);
+            
+            // Update active filter tag
+            document.querySelectorAll('.filter-tag').forEach(tag => {
+                tag.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function filterByTag(tag) {
+            currentFilter = tag;
+            const filtered = tag === 'all' ? products : products.filter(p => p.category === tag);
+            displayProducts(filtered);
+            
+            // Update active filter tag
+            document.querySelectorAll('.filter-tag').forEach(tagEl => {
+                tagEl.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function sortProducts(sortBy) {
+            let sorted = [...products];
+            
+            switch(sortBy) {
+                case 'price-low':
+                    sorted.sort((a, b) => a.price - b.price);
+                    break;
+                case 'price-high':
+                    sorted.sort((a, b) => b.price - a.price);
+                    break;
+                case 'rating':
+                    sorted.sort((a, b) => b.rating - a.rating);
+                    break;
+                case 'newest':
+                default:
+                    // Keep original order for newest
+                    break;
+            }
+            
+            // Apply current filter
+            if (currentFilter !== 'all') {
+                sorted = sorted.filter(p => p.category === currentFilter);
+            }
+            
+            displayProducts(sorted);
+        }
+
+        function searchProducts() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = products.filter(product => 
+                product.title.toLowerCase().includes(searchTerm) ||
+                product.description.toLowerCase().includes(searchTerm) ||
+                product.tech.some(tech => tech.toLowerCase().includes(searchTerm))
+            );
+            displayProducts(filtered);
+        }
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({...product, quantity: 1});
+            }
+            
+            updateCartCount();
+            updateCartDisplay();
+            
+            // Show success notification
+            showNotification(`✅ Đã thêm "${product.title}" vào giỏ hàng!`, 'success');
+        }
+
+        function updateCartCount() {
+            const count = cart.reduce((total, item) => total + item.quantity, 0);
+            document.getElementById('cartCount').textContent = count;
+        }
+
+        function updateCartDisplay() {
+            const cartItems = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p style="text-align: center; color: #666;">Giỏ hàng trống</p>';
+                cartTotal.textContent = '0đ';
+                return;
+            }
+            
+            cartItems.innerHTML = cart.map(item => `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #eee;">
+                    <div>
+                        <div style="font-weight: bold;">${item.title}</div>
+                        <div style="color: #666; font-size: 0.9rem;">Số lượng: ${item.quantity}</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-weight: bold; color: #667eea;">${formatPrice(item.price * item.quantity)}</div>
+                        <button onclick="removeFromCart(${item.id})" style="background: none; border: none; color: #f5576c; cursor: pointer;">Xóa</button>
+                    </div>
+                </div>
+            `).join('');
+            
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            cartTotal.textContent = formatPrice(total);
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartCount();
+            updateCartDisplay();
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                showNotification('❌ Giỏ hàng trống!', 'error');
+                return;
+            }
+            
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            // Simulate payment processing
+            const checkoutBtn = document.querySelector('#cartModal .btn-primary');
+            checkoutBtn.textContent = 'Đang xử lý...';
+            checkoutBtn.disabled = true;
+            
+            setTimeout(() => {
+                showNotification(`🎉 Thanh toán thành công ${formatPrice(total)}! Cảm ơn bạn đã mua hàng.`, 'success');
+                
+                // Clear cart after successful checkout
+                cart = [];
+                updateCartCount();
+                updateCartDisplay();
+                closeModal('cartModal');
+                
+                // Reset button
+                checkoutBtn.textContent = 'Thanh toán';
+                checkoutBtn.disabled = false;
+            }, 2000);
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            if (modalId === 'cartModal') {
+                updateCartDisplay();
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            submitBtn.textContent = 'Đang đăng nhập...';
+            submitBtn.disabled = true;
+            
+            setTimeout(() => {
+                showNotification('🎉 Đăng nhập thành công! Chào mừng bạn đến với CodeMarket.', 'success');
+                closeModal('loginModal');
+                
+                // Update login button
+                const loginBtn = document.querySelector('.nav-actions .btn-outline');
+                loginBtn.innerHTML = '👤 Xin chào, User';
+                loginBtn.onclick = null;
+                
+                // Reset form
+                event.target.reset();
+                submitBtn.textContent = 'Đăng nhập';
+                submitBtn.disabled = false;
+            }, 1500);
+        }
+
+        // Close modal when clicking outside
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        });
+
+        // Show product detail modal
+        function showProductDetail(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            document.getElementById('productModalTitle').textContent = product.title;
+            document.getElementById('productModalContent').innerHTML = `
+                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px; margin-bottom: 30px;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 8rem; margin-bottom: 20px; background: linear-gradient(45deg, #667eea, #764ba2); 
+                                   border-radius: 20px; padding: 40px; color: white; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                            ${product.image}
+                        </div>
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                            <div style="font-size: 2rem; font-weight: bold; color: #667eea; margin-bottom: 10px;">
+                                ${formatPrice(product.price)}
+                            </div>
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 5px; color: #ffc107; font-size: 1.2rem;">
+                                ${'⭐'.repeat(Math.floor(product.rating))} ${product.rating}/5
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn btn-primary" style="flex: 1;" onclick="addToCart(${product.id}); closeModal('productModal');">
+                                🛒 Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 style="color: #333; margin-bottom: 15px;">📋 Mô tả chi tiết</h3>
+                        <p style="line-height: 1.6; color: #666; margin-bottom: 25px;">${product.fullDescription}</p>
+                        
+                        <h3 style="color: #333; margin-bottom: 15px;">⚡ Tính năng chính</h3>
+                        <ul style="list-style: none; padding: 0; margin-bottom: 25px;">
+                            ${product.features.map(feature => `
+                                <li style="padding: 8px 0; border-bottom: 1px solid #eee; color: #555;">
+                                    ${feature}
+                                </li>
+                            `).join('')}
+                        </ul>
+                        
+                        <h3 style="color: #333; margin-bottom: 15px;">🛠️ Công nghệ sử dụng</h3>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 25px;">
+                            ${product.tech.map(tech => `
+                                <span style="background: linear-gradient(45deg, #667eea, #764ba2); color: white; 
+                                           padding: 8px 16px; border-radius: 20px; font-weight: 600;">
+                                    ${tech}
+                                </span>
+                            `).join('')}
+                        </div>
+                        
+                        <h3 style="color: #333; margin-bottom: 15px;">📦 Bao gồm</h3>
+                        <div style="background: #e8f5e8; padding: 15px; border-radius: 10px; border-left: 4px solid #28a745;">
+                            <p style="margin: 0; color: #155724; font-weight: 500;">
+                                ${product.sourceCode}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); 
+                           padding: 25px; border-radius: 15px; text-align: center; color: white; margin-top: 30px;">
+                    <h3 style="margin-bottom: 15px;">🎮 Xem Demo Trực Tiếp</h3>
+                    <p style="margin-bottom: 20px; opacity: 0.9;">
+                        Trải nghiệm đồ án này ngay bây giờ với demo trực tuyến
+                    </p>
+                    <button class="btn" onclick="openDemo('${product.demoUrl}')" 
+                            style="background: white; color: #f5576c; font-weight: bold; padding: 12px 30px;">
+                        🚀 Mở Demo
+                    </button>
+                    <p style="font-size: 0.9rem; margin-top: 15px; opacity: 0.8;">
+                        * Demo chỉ mang tính chất minh họa
+                    </p>
+                </div>
+            `;
+            
+            openModal('productModal');
+        }
+        
+        // Open demo in new tab
+        function openDemo(demoUrl) {
+            // In a real application, this would open the actual demo
+            showNotification('🎮 Demo đang được chuẩn bị! Trong thực tế sẽ mở demo trực tiếp.', 'success');
+            // window.open(demoUrl, '_blank', 'noopener,noreferrer');
+        }
+
+        // Search on Enter key
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchProducts();
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98972cceb769096a',t:'MTc1OTYwNzA3OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
